@@ -1,0 +1,607 @@
+<div class="relative bg-[#050505] text-white min-h-screen font-sans selection:bg-gold selection:text-black overflow-x-hidden">
+  
+  <!-- Scroll Progress Indicator -->
+  <div class="fixed top-0 left-0 w-full h-[2px] bg-white/5 z-[1000]">
+    <div id="scroll-progress" class="h-full bg-gold shadow-[0_0_10px_#D4AF37] transition-all duration-150" style="width: 0%"></div>
+  </div>
+
+  <!-- Cursor Aura Glow -->
+  <div class="fixed pointer-events-none z-[100] transition-transform duration-300 ease-out hidden lg:block"
+       [style.transform]="'translate3d(' + cursorPos().x + 'px, ' + cursorPos().y + 'px, 0)'">
+    <div class="w-[500px] h-[500px] -translate-x-1/2 -translate-y-1/2 bg-gold/[0.03] blur-[120px] rounded-full"></div>
+    <div class="w-1.5 h-1.5 -translate-x-1/2 -translate-y-1/2 bg-gold rounded-full shadow-[0_0_20px_#D4AF37]"></div>
+  </div>
+
+  <!-- WhatsApp FAB Removal -->
+  <!-- Instagram FAB at the bottom remains -->
+  
+  <!-- Hero Section -->
+  <section id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <app-three-hero class="absolute inset-0"></app-three-hero>
+    
+    <div class="hero-content relative z-10 text-center px-4 max-w-4xl w-full luxury-reveal">
+      <div class="mb-6 inline-block">
+        <span class="text-xs uppercase tracking-[0.5em] text-gold block mb-2">Stage Anchor & Emcee</span>
+        <div class="h-px w-full bg-gradient-to-r from-transparent via-gold to-transparent"></div>
+      </div>
+      
+      <h1 class="text-7xl md:text-[10rem] font-serif font-black mb-8 tracking-[ -0.05em] luxury-text-gradient leading-[0.8]">
+        Wedding Emcee <br> <span class="text-white">of Delhi</span>
+      </h1>
+      
+      <p class="text-lg md:text-2xl font-light text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed tracking-wide italic">
+        A symphony of grace, energy, and cinematic presence for the world's most prestigious luxury events.
+      </p>
+
+      <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+        <a routerLink="/bio" class="group px-12 py-5 rounded-full bg-white text-black hover:bg-gold transition-all duration-500 flex items-center gap-4 shadow-xl shadow-white/5 hover:shadow-gold/20">
+          <span class="text-[10px] uppercase tracking-[0.3em] font-black">The Origins</span>
+          <mat-icon class="scale-75 group-hover:translate-x-2 transition-transform">arrow_forward</mat-icon>
+        </a>
+      </div>
+    </div>
+
+    <!-- Scroll Down Aesthetic -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+      <div class="text-[9px] uppercase tracking-[0.8em] font-black [writing-mode:vertical-lr]">Discover</div>
+      <div class="w-px h-24 bg-gradient-to-b from-gold via-gold/20 to-transparent relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full bg-gold translate-y-[-100%] animate-[scrollLine_2s_infinite]"></div>
+      </div>
+    </div>
+
+    <!-- Hero Image Overlay (Floating) -->
+    <div class="absolute bottom-0 right-[-5%] w-[40%] h-[85%] z-1 mt-auto hidden lg:block opacity-90 pointer-events-none">
+      <img src="https://images.squarespace-cdn.com/content/v1/5a0c367ad1049b4334360e20/1572528734919-M4MOMR9Y6G6CUPU0W4V8/Emcee+Presenter+Host+-+London+UK?format=1500w" 
+           alt="Diksha Chaudhary - Best Wedding Emcee and Corporate Anchor in Delhi India" 
+           class="w-full h-full object-contain object-bottom filter drop-shadow-[0_0_80px_rgba(212,175,55,0.4)] mask-gradient">
+    </div>
+  </section>
+
+  <!-- Spotlight Carousel Section -->
+  <section id="spotlight" class="relative h-[80vh] w-full overflow-hidden bg-black">
+    <div class="absolute inset-0 flex transition-transform duration-1000 ease-in-out" [style.transform]="'translateX(-' + (currentCarouselIndex() * 100) + '%)'">
+      @for (item of carouselImages; track item.url) {
+        <div class="relative w-full h-full flex-shrink-0">
+          <img [src]="item.url" [alt]="item.title" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
+          <div class="absolute inset-0 flex items-center px-12 md:px-24">
+            <div class="max-w-2xl text-left md:text-center md:mx-auto">
+              <div class="text-gold text-xs uppercase tracking-[0.5em] mb-4 font-bold animate-pulse">Featured Performance</div>
+              <h2 class="text-5xl md:text-7xl font-serif font-bold mb-6 luxury-text-gradient leading-tight">{{ item.title }}</h2>
+              <p class="text-lg md:text-xl text-gray-300 md:max-w-xl md:mx-auto leading-relaxed border-l-2 border-gold/50 pl-6 md:pl-0 md:border-l-0">
+                {{ item.subtitle }}
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Carousel Controls -->
+    <div class="absolute bottom-12 left-0 w-full px-12 md:px-24 flex justify-between items-end z-20">
+      <div class="flex gap-4">
+        <button (click)="prevCarousel()" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-gold hover:text-black transition-all group">
+          <mat-icon class="group-hover:scale-110">chevron_left</mat-icon>
+        </button>
+        <button (click)="nextCarousel()" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-gold hover:text-black transition-all group">
+          <mat-icon class="group-hover:scale-110">chevron_right</mat-icon>
+        </button>
+      </div>
+
+      <div class="flex gap-2">
+        @for (item of carouselImages; track $index) {
+          <button (click)="setCarousel($index)" 
+            [ngClass]="{'w-16 bg-gold': $index === currentCarouselIndex(), 'w-12 bg-white/20': $index !== currentCarouselIndex()}"
+            class="h-1 transition-all duration-500">
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-32 px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col items-center gap-20">
+      <div class="relative group w-full max-w-3xl">
+        <div class="absolute -inset-8 bg-gold/10 rounded-[3rem] blur-3xl opacity-0 group-hover:opacity-100 transition-all duration-1000"></div>
+        <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1920&auto=format&fit=crop" alt="Diksha Chaudhary - High-Profile Indian Event Anchor and Presenter" class="relative rounded-[3rem] w-full h-[600px] object-cover shadow-[0_0_100px_rgba(212,175,55,0.1)] border border-white/10">
+        
+        <!-- Floating Experience Card -->
+        <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 glass-morphism px-12 py-10 rounded-[2.5rem] border border-gold/40 flex items-center gap-12 shadow-2xl shadow-black">
+          <div class="text-center group/stat">
+            <div class="text-5xl font-serif font-black luxury-text-gradient group-hover:scale-110 transition-transform">12+</div>
+            <div class="text-[9px] uppercase tracking-[0.3em] text-gold font-bold mt-2">Years on Stage</div>
+          </div>
+          <div class="h-12 w-px bg-white/10"></div>
+          <div class="text-center group/stat">
+            <div class="text-5xl font-serif font-black luxury-text-gradient group-hover:scale-110 transition-transform">4000+</div>
+            <div class="text-[9px] uppercase tracking-[0.3em] text-gold font-bold mt-2">Mastered Events</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center flex flex-col items-center max-w-3xl">
+        <h2 class="text-5xl font-serif font-bold mb-8 luxury-text-gradient leading-tight">The Maestro of Ceremonies</h2>
+        <p class="text-gray-400 text-lg leading-relaxed mb-10">
+          Based in the heart of New Delhi, <span class="text-gold font-bold">Diksha Chaudhary</span> is a premier Stage Artist specializing in high-profile weddings and live shows. With a presence that commands attention and a voice that resonates with pure elegance, she has orchestrated landmark events across luxury venues in Delhi NCR and beyond.
+        </p>
+        <div class="flex flex-wrap justify-center gap-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20">
+              <mat-icon class="text-gold scale-75">star</mat-icon>
+            </div>
+            <span class="text-xs uppercase tracking-widest text-gray-300 font-bold">Award-winning Presenter</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20">
+              <mat-icon class="text-gold scale-75">public</mat-icon>
+            </div>
+            <span class="text-xs uppercase tracking-widest text-gray-300 font-bold">Global Cultural Ambassador</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Excellence Blueprint Section -->
+  <section id="milestones" class="py-32 bg-[#030303] relative overflow-hidden border-y border-white/5">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="text-center mb-24 transition-all duration-1000 transform reveal-up">
+        <div class="text-gold text-[10px] uppercase tracking-[1em] mb-4 font-black">The Heritage</div>
+        <h2 class="text-5xl font-serif font-bold luxury-text-gradient">A Legacy of Excellence</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        @for (m of milestones; track m.label; let i = $index) {
+          <div class="milestone-card group relative glass-morphism p-12 rounded-[3.5rem] border border-white/5 overflow-hidden transition-all duration-1000">
+            <!-- Background Decorative Element -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-gold/5 rounded-full blur-3xl group-hover:bg-gold/10 transition-colors"></div>
+            
+            <!-- Numbering -->
+            <div class="absolute top-8 right-10 text-4xl font-serif italic text-white/5 group-hover:text-gold/20 transition-colors duration-500">
+              {{ m.num }}
+            </div>
+
+            <div class="relative mb-10 w-24 h-24 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 group-hover:border-gold/30 transition-all duration-500">
+              <mat-icon [class]="m.color" 
+                        class="text-4xl scale-[2] group-hover:scale-[2.4] transition-all duration-500">
+                {{ m.icon }}
+              </mat-icon>
+            </div>
+
+            <div class="text-6xl font-serif font-bold text-white mb-3 tracking-tighter">{{ m.metric }}</div>
+            <div class="text-gold text-[11px] uppercase tracking-[0.4em] font-black mb-6">{{ m.label }}</div>
+            <div class="h-px w-12 bg-white/10 group-hover:w-24 group-hover:bg-gold/50 transition-all duration-700 mb-8"></div>
+            <p class="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">{{ m.desc }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Hire Section (Services) -->
+  <section id="services" class="py-32 px-8 bg-[#0a0a0a]">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-20 flex flex-col items-center transition-all duration-1000 transform"
+           [class]="servicesVisible() ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+        <h2 class="text-5xl font-serif font-bold mb-6 luxury-text-gradient">The Art of Atmosphere</h2>
+        <div class="text-xs uppercase tracking-[0.4em] text-gray-500 mb-8 font-black">Versatility. Grace. Precision.</div>
+        <p class="text-gray-400 max-w-2xl leading-relaxed">
+          In an industry of announcers, <span class="text-gold font-bold">Diksha</span> stands as an orchestrator. Her unique methodology brings a fusion of elegance, strategy, and energy that is tailor-made for specific event archetypes.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Marriage -->
+        <a routerLink="/services/wedding" class="group relative overflow-hidden rounded-[3rem] aspect-[4/5] border border-white/5 block bg-black transition-all duration-1000 transform"
+           [class]="servicesVisible() ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'"
+           style="transition-delay: 200ms">
+          <video class="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-70 transition-all duration-700"
+                 autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1470&auto=format&fit=crop">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-person-playing-a-grand-piano-34444-large.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+          <div class="absolute inset-0 p-12 flex flex-col justify-end text-center items-center">
+            <div class="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mb-6 group-hover:bg-gold group-hover:text-black transition-all duration-500">
+              <mat-icon>favorite</mat-icon>
+            </div>
+            <h3 class="text-3xl font-serif font-bold text-white mb-4">Royal Weddings</h3>
+            <p class="text-gray-400 text-sm mb-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">Crafting emotional milestones and timeless cultural unions.</p>
+            <span class="text-gold text-[10px] uppercase tracking-widest font-black border-b border-gold/30 pb-2">View Portfolio →</span>
+          </div>
+        </a>
+
+        <!-- Corporate -->
+        <a routerLink="/services/corporate" class="group relative overflow-hidden rounded-[3rem] aspect-[4/5] border border-white/5 block bg-black transition-all duration-1000 transform"
+           [class]="servicesVisible() ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'"
+           style="transition-delay: 400ms">
+          <video class="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-70 transition-all duration-700"
+                 autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1469&auto=format&fit=crop">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-city-at-night-with-light-trails-342-large.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+          <div class="absolute inset-0 p-12 flex flex-col justify-end text-center items-center">
+            <div class="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mb-6 group-hover:bg-gold group-hover:text-black transition-all duration-500">
+              <mat-icon>business</mat-icon>
+            </div>
+            <h3 class="text-3xl font-serif font-bold text-white mb-4">Global Summits</h3>
+            <p class="text-gray-400 text-sm mb-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">Professional branding and VIP engagement for elite forums.</p>
+            <span class="text-gold text-[10px] uppercase tracking-widest font-black border-b border-gold/30 pb-2">View Portfolio →</span>
+          </div>
+        </a>
+
+        <!-- Live Shows -->
+        <a routerLink="/services/liveshow" class="group relative overflow-hidden rounded-[3rem] aspect-[4/5] border border-white/5 block bg-black transition-all duration-1000 transform"
+           [class]="servicesVisible() ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'"
+           style="transition-delay: 600ms">
+          <video class="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-70 transition-all duration-700"
+                 autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1470&auto=format&fit=crop">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-stage-lights-flashing-at-a-concert-4017-large.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+          <div class="absolute inset-0 p-12 flex flex-col justify-end text-center items-center">
+            <div class="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mb-6 group-hover:bg-gold group-hover:text-black transition-all duration-500">
+              <mat-icon>bolt</mat-icon>
+            </div>
+            <h3 class="text-3xl font-serif font-bold text-white mb-4">Live Spectacles</h3>
+            <p class="text-gray-400 text-sm mb-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">Unstoppable stage presence and crowd magnetism for grand spectacles.</p>
+            <span class="text-gold text-[10px] uppercase tracking-widest font-black border-b border-gold/30 pb-2">View Portfolio →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="py-32 bg-[#020202]">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+        <div>
+          <div class="text-gold text-[10px] uppercase tracking-[0.5em] mb-4 font-black">Curated Portfolio</div>
+          <h2 class="text-5xl font-serif font-bold luxury-text-gradient">Captured Movements</h2>
+        </div>
+        <div class="text-gray-500 text-xs uppercase tracking-widest font-bold max-w-xs text-right">
+          A visual chronicle of elegance and emotional resonance.
+        </div>
+      </div>
+
+      <!-- Bento Grid Gallery -->
+      <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 min-h-[800px]">
+        @for (img of galleryImages(); track img.url; let i = $index) {
+          <div [class]="i === 0 ? 'md:col-span-2 md:row-span-2' : (i === 1 ? 'md:col-span-1 md:row-span-2' : (i === 2 ? 'md:col-span-1 md:row-span-1' : ''))" 
+               class="gallery-item relative group cursor-pointer overflow-hidden rounded-[2.5rem] border border-white/10" 
+               (click)="openLightbox(img.url)" (keydown.enter)="openLightbox(img.url)" tabindex="0">
+            <img [src]="img.url" [alt]="img.title" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-10 flex flex-col justify-end">
+              <div class="text-gold text-[10px] uppercase tracking-[0.4em] font-black mb-1 opacity-80 group-hover:opacity-100 transition-opacity">{{ img.title }}</div>
+              <div class="text-white text-xl md:text-2xl font-serif font-bold translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                View Moment
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Instagram Reel Integration -->
+      <div class="mt-32 max-w-5xl mx-auto">
+        <div class="text-center mb-16">
+          <div class="text-gold text-[10px] uppercase tracking-[0.8em] mb-4 font-black">Digital Presence</div>
+          <h2 class="text-4xl md:text-5xl font-serif font-bold luxury-text-gradient">Moments in Motion</h2>
+        </div>
+
+        <div class="glass-morphism p-2 rounded-[3.5rem] border border-white/10 shadow-2xl relative overflow-hidden group">
+          <div class="aspect-[9/16] md:aspect-video w-full rounded-[3rem] overflow-hidden bg-black relative">
+             <iframe src="https://www.instagram.com/reel/DXofidGD1en/embed/captioned/" 
+                     class="w-full h-full border-none scale-105" 
+                     allowtransparency="true" 
+                     allowfullscreen="true"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Events Section (Unique Timeline Style) -->
+  <section id="events" class="py-32 px-8 bg-[#020202] relative overflow-hidden">
+    <!-- Background Decor -->
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
+    
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-24">
+        <div class="text-gold text-[10px] uppercase tracking-[1em] mb-4 font-black">Succession of Excellence</div>
+        <h2 class="text-5xl md:text-6xl font-serif font-bold luxury-text-gradient">Recent Engagements</h2>
+      </div>
+
+      <div class="relative max-w-5xl mx-auto">
+        <!-- Connecting Line -->
+        <div class="absolute left-0 md:left-1/2 w-px h-full bg-gradient-to-b from-transparent via-gold/30 to-transparent -translate-x-1/2"></div>
+
+        <div class="space-y-32">
+          @for (event of events; track event.title; let i = $index) {
+            <div class="relative flex flex-col md:flex-row items-center gap-12 group transition-all duration-1000 transform"
+                 [class]="timelineVisible() ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'"
+                 [style.transition-delay]="(i * 200) + 'ms'">
+              <!-- Dot Indicator -->
+              <div class="absolute left-0 md:left-1/2 w-4 h-4 bg-black border-2 border-gold rounded-full -translate-x-1/2 z-10 group-hover:scale-150 group-hover:bg-gold transition-all duration-500 shadow-[0_0_15px_rgba(212,175,55,0.5)]"></div>
+
+              <!-- Content Side -->
+              <div [class]="i % 2 === 0 ? 'md:w-1/2 md:text-right md:pr-20' : 'md:w-1/2 md:order-2 md:pl-20 md:text-left'" class="w-full pl-12 md:pl-0">
+                <div class="inline-block px-4 py-1 rounded-full border border-gold/20 text-gold text-[9px] uppercase tracking-widest font-black mb-4 group-hover:bg-gold group-hover:text-black transition-all">
+                  {{ event.date }}
+                </div>
+                <h3 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4 group-hover:text-gold transition-colors">{{ event.title }}</h3>
+                <div [class]="i % 2 === 0 ? 'md:justify-end' : 'md:justify-start'" class="flex items-center gap-3 text-gray-500">
+                  <mat-icon class="scale-75">location_on</mat-icon>
+                  <span class="text-xs uppercase tracking-[0.2em] font-medium">{{ event.location }}</span>
+                </div>
+              </div>
+
+              <!-- Empty Side (for Desktop) -->
+              <div class="hidden md:block md:w-1/2"></div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="text-center mt-24">
+        <a href="#booking" class="group inline-flex items-center gap-6">
+          <div class="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
+            <mat-icon class="scale-75">calendar_today</mat-icon>
+          </div>
+          <span class="text-[10px] uppercase tracking-[0.5em] text-white font-black border-b border-white/5 pb-2 group-hover:border-gold transition-all">Enquire for your milestone</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Section -->
+  <section id="booking" class="py-32 bg-[#080808] px-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto mb-24">
+      <div class="text-center reveal-up">
+        <div class="text-gold text-[10px] uppercase tracking-[1em] mb-4 font-black">Availability</div>
+        <h2 class="text-6xl font-serif font-bold luxury-text-gradient mb-8">Exclusive Engagement</h2>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto font-light leading-relaxed">
+          Secure the most prestigious voice for your event. Our calendar is open for <span class="text-white font-bold tracking-widest uppercase">2026-2027</span>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Redesigned Luxury Calendar -->
+    <div id="booking-calendar" class="max-w-4xl mx-auto reveal-up">
+      <div class="glass-morphism p-6 md:p-16 rounded-[2.5rem] md:rounded-[4rem] border border-white/10 glow-gold relative overflow-hidden">
+        <!-- Floating decor -->
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-gold/5 rounded-full blur-[100px]"></div>
+        
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 md:mb-20 gap-8 md:gap-12 relative z-10">
+          <div class="text-center md:text-left">
+            <h3 class="text-3xl md:text-5xl font-serif font-bold luxury-text-gradient tracking-tight">{{ currentMonth() | date:'MMMM yyyy' }}</h3>
+            <p class="text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-white/30 mt-3 font-bold">Reserving your milestone legacy</p>
+          </div>
+          <div class="flex items-center gap-6 md:gap-4">
+            <button (click)="prevMonth()" class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full md:rounded-2xl bg-white/5 border border-white/10 hover:border-gold/50 hover:bg-gold/10 transition-all group active:scale-95">
+              <mat-icon class="group-hover:-translate-x-1 transition-transform text-white/70">chevron_left</mat-icon>
+            </button>
+            <button (click)="nextMonth()" class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full md:rounded-2xl bg-white/5 border border-white/10 hover:border-gold/50 hover:bg-gold/10 transition-all group active:scale-95">
+              <mat-icon class="group-hover:translate-x-1 transition-transform text-white/70">chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-7 gap-1 md:gap-6 relative z-10">
+          @for (day of ['S', 'M', 'T', 'W', 'T', 'F', 'S']; track day) {
+            <div class="text-center text-[8px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] font-black text-gold/40 pb-4">{{ day }}</div>
+          }
+          
+          @for (date of datesInMonth(); track $index) {
+            @if (date) {
+              <div 
+                [ngClass]="{'calendar-day': true, 'selected': selectedDate() === date}"
+                [class]="getDateStatus(date)"
+                (click)="onDateClick(date)"
+                (keydown.enter)="onDateClick(date)"
+                tabindex="0"
+                class="relative h-10 w-10 md:h-20 md:w-full flex items-center justify-center mx-auto text-[10px] md:text-sm font-bold rounded-lg md:rounded-xl border transition-all cursor-pointer"
+              >
+                <span class="relative z-10">{{ date.getDate() }}</span>
+                @if (getDateStatus(date) === 'available' && selectedDate() !== date) {
+                  <div class="absolute inset-0 bg-emerald-500/5 animate-pulse rounded-lg md:rounded-xl"></div>
+                }
+              </div>
+            } @else {
+              <div class="aspect-square"></div>
+            }
+          }
+        </div>
+
+        <!-- Luxury Legend -->
+        <div class="flex flex-wrap justify-center gap-6 md:gap-12 mt-12 md:mt-20 pt-8 md:pt-12 border-t border-white/5 relative z-10">
+          <div class="flex items-center gap-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+            <span class="text-[8px] md:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.2em] text-white/50 font-black">High Demand</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/30"></div>
+            <span class="text-[8px] md:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.2em] text-white/50 font-black">Reserved</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-gold shadow-[0_0_10px_rgba(212,175,55,0.8)]"></div>
+            <span class="text-[8px] md:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.2em] text-white/50 font-black">Your Vision</span>
+          </div>
+        </div>
+
+        <!-- Artist Portal Access -->
+        <div class="mt-16 flex justify-center relative z-10">
+          <a routerLink="/admin" class="flex items-center gap-3 px-8 py-3 bg-white/5 border border-white/10 rounded-full hover:border-gold/50 hover:bg-gold/5 transition-all group opacity-40 hover:opacity-100">
+            <mat-icon class="scale-90 text-gray-400 group-hover:text-gold transition-all">admin_panel_settings</mat-icon>
+            <span class="text-[9px] uppercase tracking-[0.3em] font-black text-gray-400 group-hover:text-gold transition-colors">Credential Access</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-24 bg-[#030303] border-t border-gold/10 px-8 relative overflow-hidden">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent"></div>
+    
+    <div class="max-w-7xl mx-auto flex flex-col items-center gap-12">
+      <div class="flex flex-col items-center">
+        <div class="text-4xl font-serif font-bold luxury-text-gradient tracking-tighter text-center mb-2">DIKSHA CHAUDHARY</div>
+        <div class="text-[9px] uppercase tracking-[0.6em] text-gold font-black">The Voice of Distinction</div>
+      </div>
+      
+      <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+        <a href="https://www.instagram.com/anchordiksha_chaudhary?igsh=MTBvYmRhbGltMThuZw==" target="_blank" class="text-gray-400 hover:text-gold transition-all flex items-center gap-4 group">
+            <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-gold/50 group-hover:bg-gold/5 transition-all">
+              <mat-icon class="scale-90 group-hover:scale-110 group-hover:rotate-12 transition-all">camera_alt</mat-icon>
+            </div>
+            <span class="text-xs uppercase tracking-[0.2em] font-black group-hover:text-gold">Instagram Official</span>
+        </a>
+        
+        <div class="flex items-center gap-4">
+          <a routerLink="/admin" class="text-gray-600 hover:text-gold transition-all flex items-center gap-2 group">
+            <mat-icon class="scale-75 group-hover:text-gold transition-colors">admin_panel_settings</mat-icon> 
+            <span class="text-[9px] uppercase tracking-[0.2em] font-bold">Portal</span>
+          </a>
+          
+          <div class="h-4 w-px bg-white/10 mx-2"></div>
+          
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full shadow-[0_0_8px] shadow-current" 
+                 [class.bg-green-500]="dbStatus() === 'connected'"
+                 [class.bg-yellow-500]="dbStatus() === 'connecting'"
+                 [class.bg-red-500]="dbStatus() === 'error' || dbStatus() === 'disconnected'"></div>
+            <span class="text-[9px] uppercase tracking-widest text-gray-500 font-black">
+              System Core: <span class="text-gray-400">{{ dbStatus() }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex flex-col items-center gap-6 text-center">
+        <div class="px-10 py-6 bg-[#080808] border border-gold/10 rounded-[2rem] shadow-2xl shadow-gold/5 group hover:border-gold/30 transition-all duration-700">
+          <div class="text-lg md:text-xl font-serif italic text-white mb-2 font-medium">A Luxury Digital Experience by <span class="text-gold">Eternal Aura</span></div>
+          <div class="text-[9px] uppercase tracking-[0.5em] text-gray-500 font-bold">
+            Crafted for the elite: <a href="https://instagram.com/akshayee.aura" target="_blank" class="text-gold hover:text-white transition-colors">@akshayee.aura</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Booking Modal -->
+  @if (isBookingModalOpen()) {
+    <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/90 backdrop-blur-xl" (click)="isBookingModalOpen.set(false)" (keydown.escape)="isBookingModalOpen.set(false)" tabindex="0"></div>
+      <div class="relative w-full max-w-lg glass-card p-10 glow-gold">
+        <h3 class="text-3xl font-serif font-bold mb-2 luxury-text-gradient text-center">Reserve Engagement</h3>
+        <p class="text-gray-400 text-[10px] uppercase tracking-widest mb-8 text-center">{{ selectedDate() | date:'fullDate' }}</p>
+        
+        <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()" class="space-y-6 text-left">
+          <div class="space-y-1">
+            <label for="full-name" class="text-[9px] uppercase tracking-[0.3em] text-gold font-bold ml-1">Client Identity</label>
+            <input id="full-name" type="text" formControlName="name" placeholder="Name or Organization" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:border-gold outline-none transition-all placeholder:text-white/10" [class.border-red-500]="bookingForm.get('name')?.invalid && bookingForm.get('name')?.touched">
+          </div>
+          <div class="space-y-1">
+            <label for="phone-number" class="text-[9px] uppercase tracking-[0.3em] text-gold font-bold ml-1">Contact Protocol</label>
+            <input id="phone-number" type="tel" formControlName="phone" placeholder="Valid 10-digit number" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:border-gold outline-none transition-all placeholder:text-white/10" [class.border-red-500]="bookingForm.get('phone')?.invalid && bookingForm.get('phone')?.touched">
+          </div>
+          <div class="space-y-1">
+            <label for="event-type" class="text-[9px] uppercase tracking-[0.3em] text-gold font-bold ml-1">Occasion Archetype</label>
+            <select id="event-type" formControlName="event_type" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:border-gold outline-none transition-all appearance-none cursor-pointer">
+              <optgroup label="Private Affairs" class="bg-black">
+                <option value="Wedding">Royal Wedding Ceremony</option>
+                <option value="Engagement">Engagement / Ring Ceremony</option>
+                <option value="Sangeet">Sangeet & Musical Night</option>
+              </optgroup>
+              <optgroup label="Public & Corporate" class="bg-black">
+                <option value="Corporate">Corporate Gala & Summits</option>
+                <option value="Awards">Awards Ceremony & Launch</option>
+                <option value="Show">Live Concert & Fashion Show</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label for="event-message" class="text-[9px] uppercase tracking-[0.3em] text-gold font-bold ml-1">Event Vision (Optional)</label>
+            <textarea id="event-message" formControlName="message" placeholder="Draft your vision for this milestone..." class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:border-gold outline-none transition-all h-24 placeholder:text-white/10"></textarea>
+          </div>
+          
+          <div class="flex flex-col gap-4 mt-8">
+            <button type="submit" [disabled]="isSubmitting()" class="w-full bg-gold text-black py-5 rounded-2xl font-black uppercase tracking-[0.2em] hover:bg-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl shadow-gold/20">
+              @if (isSubmitting()) {
+                <mat-icon class="animate-spin">sync</mat-icon> Processing...
+              } @else {
+                Log Engagement Request
+              }
+            </button>
+            <button type="button" (click)="isBookingModalOpen.set(false)" class="w-full py-4 text-[9px] uppercase tracking-widest text-white/30 hover:text-white transition-colors">
+              Cancel Enrollment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Lightbox -->
+  @if (isLightboxOpen()) {
+    <div class="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm" (click)="isLightboxOpen.set(false)" (keydown.escape)="isLightboxOpen.set(false)" tabindex="0">
+      <img [src]="activeImage()" alt="Gallery Masterpiece" class="max-w-full max-h-full object-contain rounded-lg border border-white/10 shadow-2xl">
+      <button class="absolute top-8 right-8 text-white hover:text-gold" (click)="isLightboxOpen.set(false)"><mat-icon class="scale-150">close</mat-icon></button>
+    </div>
+  }
+
+  <!-- Habit Tracker Onboarding Modal (As requested at end of prompt) -->
+  @if (isHabitModalOpen()) {
+    <div class="fixed inset-0 z-[300] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/80 backdrop-blur-md" (click)="closeOnboarding()" (keydown.enter)="closeOnboarding()" tabindex="0"></div>
+      <div class="relative w-full max-w-md glass-morphism p-10 rounded-3xl border border-gold/40 text-center">
+        <div class="w-20 h-20 bg-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <mat-icon class="text-gold scale-150">verified</mat-icon>
+        </div>
+        <h3 class="text-3xl font-serif font-bold mb-4 luxury-text-gradient">Habit of Excellence</h3>
+        <p class="text-gray-400 mb-8 leading-relaxed">
+          "Excellence is not an act, but a habit." Welcome to <span class="text-gold font-bold">Diksha Chaudhary's</span> world. We track our commitment to your event's perfection daily.
+        </p>
+        <button (click)="closeOnboarding()" class="w-full bg-gold text-black py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-gold-light transition-all">
+          Join the Elite
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Success Modal -->
+  @if (isSuccessModalOpen()) {
+    <div class="fixed inset-0 z-[400] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/95 backdrop-blur-3xl" (click)="isSuccessModalOpen.set(false)" (keydown.escape)="isSuccessModalOpen.set(false)" tabindex="0"></div>
+      <div class="relative w-full max-w-md glass-morphism p-12 rounded-[2.5rem] border border-gold/50 text-center shadow-[0_0_100px_rgba(212,175,55,0.2)] overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent"></div>
+        
+        <div class="w-24 h-24 bg-gold rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-gold/40 relative">
+          <mat-icon class="text-black scale-[2.0]">done_all</mat-icon>
+          <div class="absolute inset-0 rounded-full border-4 border-white/20 animate-ping"></div>
+        </div>
+        
+        <div class="text-gold text-[10px] uppercase tracking-[0.5em] mb-4 font-black">Inquiry Captured</div>
+        <h3 class="text-4xl font-serif font-bold mb-6 luxury-text-gradient leading-tight">Registry <br> Successful</h3>
+        
+        <p class="text-gray-400 mb-10 leading-relaxed">
+          Your request for <span class="text-white font-bold">{{ selectedDate() | date:'MMMM d, yyyy' }}</span> has been logged in our elite registry. <br><br>
+          <span class="text-sm italic">Diksha's management team will reach out within 24 hours to proceed with the engagement.</span>
+        </p>
+        
+        <button (click)="isSuccessModalOpen.set(false)" class="w-full bg-gold text-black py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-white hover:scale-[1.02] transition-all shadow-xl">
+          Return to Stage
+        </button>
+      </div>
+    </div>
+  }
+  <a href="https://www.instagram.com/anchordiksha_chaudhary?igsh=MTBvYmRhbGltMThuZw==" target="_blank" class="fixed bottom-8 right-8 z-[90] w-16 h-16 glass-morphism rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300 border border-gold/50">
+    <mat-icon class="text-gold scale-125">camera_alt</mat-icon>
+    <div class="absolute -top-1 -right-1 w-5 h-5 bg-gold rounded-full flex items-center justify-center text-[10px] font-bold text-black animate-pulse">!</div>
+  </a>
+
+</div>

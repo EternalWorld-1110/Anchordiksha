@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dikshachaudhary.com/sitemap.xml

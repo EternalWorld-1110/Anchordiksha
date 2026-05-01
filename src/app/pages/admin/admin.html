@@ -1,0 +1,219 @@
+<div class="min-h-screen bg-[#050505] text-white p-8 font-sans">
+  
+  @if (!isLoggedIn()) {
+    <div class="max-w-md mx-auto mt-20 glass-morphism p-10 rounded-3xl border border-gold/30">
+      <div class="text-3xl font-serif font-bold mb-8 luxury-text-gradient text-center">Admin Portal</div>
+      
+      @if (loginStatus(); as status) {
+        <div [class]="status.type === 'error' ? 'bg-red-500/10 border-red-500/50 text-red-500' : 'bg-green-500/10 border-green-500/50 text-green-500'" class="p-4 rounded-xl border mb-6 text-xs text-center font-medium">
+          {{ status.msg }}
+        </div>
+      }
+
+      <form (ngSubmit)="login()" class="space-y-6">
+        <div class="space-y-2">
+          <label for="admin-email" class="text-[10px] uppercase tracking-widest text-gold">Admin Email</label>
+          <input id="admin-email" type="email" [ngModel]="loginEmail()" (ngModelChange)="loginEmail.set($event)" name="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-gold outline-none transition-all">
+        </div>
+        <div class="space-y-2">
+          <label for="admin-password" class="text-[10px] uppercase tracking-widest text-gold">Access Password</label>
+          <input id="admin-password" type="password" [ngModel]="loginPassword()" (ngModelChange)="loginPassword.set($event)" name="password" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-gold outline-none transition-all">
+        </div>
+        <button type="submit" [disabled]="isLoggingIn()" class="w-full bg-gold text-black py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-gold-light transition-all shadow-lg shadow-gold/20 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2">
+          @if (isLoggingIn()) {
+            <mat-icon class="animate-spin text-sm">sync</mat-icon>
+            Verifying...
+          } @else {
+            Unlock Dashboard
+          }
+        </button>
+      </form>
+      <p class="text-[10px] text-gray-500 mt-6 text-center tracking-widest">diksha&#64;anchor.com / luxury2024</p>
+    </div>
+  } @else {
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-16">
+        <h1 class="text-5xl font-serif font-bold luxury-text-gradient mb-4">Registry Dashboard</h1>
+        <p class="text-gray-400 text-xs uppercase tracking-[0.4em] font-medium">Strategic Event Orchestration</p>
+        
+        <div class="flex justify-center flex-wrap gap-4 mt-8">
+          <button (click)="activeTab.set('bookings')" [class]="activeTab() === 'bookings' ? 'bg-gold text-black' : 'bg-white/5'" class="px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all">
+            Bookings
+          </button>
+          <button (click)="activeTab.set('gallery')" [class]="activeTab() === 'gallery' ? 'bg-gold text-black' : 'bg-white/5'" class="px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all">
+            Gallery Settings
+          </button>
+          <button (click)="activeTab.set('admins')" [class]="activeTab() === 'admins' ? 'bg-gold text-black' : 'bg-white/5'" class="px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all">
+            Manage Admins
+          </button>
+          <button (click)="loadAllData()" class="flex items-center gap-2 px-6 py-3 glass-morphism rounded-full hover:text-gold transition-all group">
+            <mat-icon class="group-hover:rotate-180 transition-transform duration-500">refresh</mat-icon>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Refresh</span>
+          </button>
+          <button (click)="logout()" class="px-8 py-3 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">
+            Exit
+          </button>
+        </div>
+      </div>
+
+      <!-- Bookings Tab -->
+      @if (activeTab() === 'bookings') {
+        <div class="grid gap-6">
+          @for (booking of bookings(); track booking.id) {
+            <div class="glass-morphism p-8 rounded-2xl border border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 group hover:border-white/20 transition-all">
+              <div class="flex-1">
+                <div class="flex items-center gap-4 mb-3">
+                  <span [class]="'px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ' + (booking.status === 'booked' ? 'bg-red-500/20 text-red-500' : 'bg-green-500/20 text-green-500')">
+                    {{ booking.status }}
+                  </span>
+                  <span class="text-gold font-serif text-xl border-l border-white/10 pl-4">{{ booking.event_date | date:'fullDate' }}</span>
+                </div>
+                <h3 class="text-2xl font-serif font-bold mb-1">{{ booking.name }}</h3>
+                <div class="flex flex-wrap gap-4 text-xs text-gray-400 uppercase tracking-widest">
+                  <span class="flex items-center gap-1"><mat-icon class="scale-50">phone</mat-icon> {{ booking.phone }}</span>
+                  <span class="flex items-center gap-1"><mat-icon class="scale-50">category</mat-icon> {{ booking.event_type }}</span>
+                </div>
+                @if (booking.message) {
+                  <p class="mt-4 text-gray-500 text-sm italic border-l-2 border-gold/30 pl-4">{{ booking.message }}</p>
+                }
+              </div>
+
+              <div class="flex gap-2">
+                @if (booking.status === 'booked') {
+                  <button (click)="updateStatus(booking, 'completed')" class="px-4 py-2 bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-green-500 hover:text-black transition-all">
+                    Mark Completed
+                  </button>
+                }
+                <button (click)="deleteBooking(booking.id!)" class="p-3 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-black transition-all">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          } @empty {
+            <div class="text-center py-40 glass-morphism rounded-3xl border border-white/5">
+              <mat-icon class="text-gray-700 scale-[3.0] mb-8">event_busy</mat-icon>
+              <div class="text-gray-500 uppercase tracking-widest">No bookings found</div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Gallery Tab -->
+      @if (activeTab() === 'gallery') {
+        <div class="space-y-12">
+          <!-- Add New Image -->
+          <div class="glass-morphism p-10 rounded-3xl border border-gold/20">
+            <h2 class="text-2xl font-serif font-bold mb-8">Featured Gallery Expansion</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div class="space-y-4">
+                <label for="img-file-upload" class="text-[10px] uppercase tracking-widest text-gold block">Upload Image File</label>
+                <div class="relative group">
+                  <input id="img-file-upload" type="file" (change)="onFileSelected($event)" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                  <div class="w-full bg-white/5 border-2 border-dashed border-white/10 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 group-hover:border-gold/50 transition-all">
+                    <mat-icon class="text-3xl text-gray-400 group-hover:text-gold transition-colors">
+                      {{ isUploading() ? 'sync' : 'cloud_upload' }}
+                    </mat-icon>
+                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest text-center">
+                      {{ isUploading() ? 'Syncing to Server...' : 'Click or Drop to Upload Photo' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <div class="space-y-2">
+                  <label for="img-title" class="text-[10px] uppercase tracking-widest text-gold block">Image Title / Description</label>
+                  <input id="img-title" type="text" [ngModel]="newImage().title" (ngModelChange)="newImage.set({...newImage(), title: $event})" placeholder="Grand Entrance Decor" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-gold">
+                </div>
+                <div class="space-y-2">
+                  <label for="img-url-display" class="text-[10px] uppercase tracking-widest text-gold block">Generated Path (Read-only)</label>
+                  <input id="img-url-display" type="text" [value]="newImage().url" readonly placeholder="Awaiting file upload..." class="w-full bg-black/20 border border-white/5 text-gray-400 rounded-xl px-4 py-3 outline-none cursor-not-allowed text-xs italic">
+                </div>
+              </div>
+            </div>
+            
+            <button (click)="addImage()" [disabled]="isUploading() || !newImage().url || !newImage().title" class="w-full bg-gold text-black py-4 rounded-xl font-bold uppercase tracking-widest hover:shadow-gold/20 shadow-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+              @if (isUploading()) {
+                Processing Upload...
+              } @else {
+                Finalize & Post to Gallery
+              }
+            </button>
+          </div>
+
+          <!-- Existing Images -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @for (img of gallery(); track img.id) {
+              <div class="glass-morphism rounded-2xl overflow-hidden border border-white/5 group">
+                <div class="aspect-[16/9] relative">
+                  <img [src]="img.url" [alt]="img.title" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6 space-y-4 bg-white/5">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <div class="text-[10px] uppercase tracking-widest text-gold font-bold mb-1">Moment Title</div>
+                      <div class="font-serif text-lg">{{ img.title }}</div>
+                    </div>
+                    <div class="flex gap-1">
+                      <button (click)="updateImageOrder(img, 'up')" class="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Move Up"><mat-icon class="scale-90">keyboard_arrow_up</mat-icon></button>
+                      <button (click)="updateImageOrder(img, 'down')" class="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Move Down"><mat-icon class="scale-90">keyboard_arrow_down</mat-icon></button>
+                    </div>
+                  </div>
+                  
+                  <div class="pt-4 border-t border-white/10 flex justify-end">
+                    <button (click)="deleteImage(img.id!)" class="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 active:scale-95 transition-all text-xs font-bold uppercase tracking-widest shadow-lg shadow-red-600/20">
+                      <mat-icon class="scale-90">delete_forever</mat-icon>
+                      Delete Permanently
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Admin Management Tab -->
+      @if (activeTab() === 'admins') {
+        <div class="space-y-12">
+          <!-- Add New Admin -->
+          <div class="glass-morphism p-10 rounded-3xl border border-gold/20">
+            <h2 class="text-2xl font-serif font-bold mb-8">Authorize New Administrator</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div class="space-y-2">
+                <label for="admin-name" class="text-[10px] uppercase tracking-widest text-gold block">Full Name</label>
+                <input id="admin-name" type="text" [ngModel]="newAdmin().name" (ngModelChange)="newAdmin.set({...newAdmin(), name: $event})" placeholder="John Doe" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-gold">
+              </div>
+              <div class="space-y-2">
+                <label for="admin-email" class="text-[10px] uppercase tracking-widest text-gold block">Email Address</label>
+                <input id="admin-email" type="email" [ngModel]="newAdmin().email" (ngModelChange)="newAdmin.set({...newAdmin(), email: $event})" placeholder="admin@example.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-gold">
+              </div>
+              <div class="space-y-2">
+                <label for="admin-password" class="text-[10px] uppercase tracking-widest text-gold block">Secure Password</label>
+                <input id="admin-password" type="password" [ngModel]="newAdmin().password" (ngModelChange)="newAdmin.set({...newAdmin(), password: $event})" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-gold">
+              </div>
+            </div>
+            <button (click)="addAdmin()" class="w-full bg-gold text-black py-4 rounded-xl font-bold uppercase tracking-widest hover:shadow-gold/20 shadow-lg">
+              Grant Admin Access
+            </button>
+          </div>
+
+          <!-- Active Admins -->
+          <div class="grid gap-4">
+            @for (adm of adminAccounts(); track adm.id) {
+              <div class="glass-morphism p-6 rounded-2xl border border-white/5 flex justify-between items-center">
+                <div>
+                  <div class="font-bold tracking-tight">{{ adm.name }}</div>
+                  <div class="text-xs text-gray-500">{{ adm.email }}</div>
+                </div>
+                <button (click)="deleteAdmin(adm.id!)" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+                  <mat-icon>person_remove</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
